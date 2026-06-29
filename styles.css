@@ -1,0 +1,225 @@
+:root {
+  color-scheme: dark;
+  --ink: #fff8f3;
+  --muted: #ffe4d5;
+  --gold: #ffd166;
+  --rose: #ff6f9f;
+  --blue: #8bd3dd;
+  --shadow: rgba(15, 13, 35, 0.58);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #11172d;
+  color: var(--ink);
+  font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR",
+    system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+.stage {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 2rem;
+  cursor: pointer;
+  background-image:
+    linear-gradient(180deg, rgba(9, 15, 35, 0.28), rgba(9, 13, 27, 0.62)),
+    linear-gradient(90deg, rgba(9, 15, 35, 0.3), rgba(255, 111, 159, 0.04)),
+    url("assets/anniversary-bg.png");
+  background-position: center;
+  background-size: cover;
+}
+
+.stage::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(255, 232, 209, 0.1), transparent 28%),
+    linear-gradient(0deg, rgba(5, 7, 19, 0.28), transparent 42%);
+  pointer-events: none;
+}
+
+#sparkle-layer,
+#heart-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#sparkle-layer {
+  z-index: 0;
+}
+
+#heart-layer {
+  z-index: 3;
+}
+
+.message {
+  position: relative;
+  z-index: 2;
+  width: min(45rem, 100%);
+  text-align: center;
+  text-shadow: 0 0.2rem 1.4rem var(--shadow), 0 0 2.5rem rgba(255, 118, 157, 0.36);
+  user-select: none;
+}
+
+.kicker {
+  margin: 0 0 0.8rem;
+  color: var(--gold);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+h1 {
+  margin: 0;
+  color: #fffdf9;
+  font-family: Georgia, "Times New Roman", "Apple SD Gothic Neo", serif;
+  font-size: 5.25rem;
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.message-line {
+  margin: 1.15rem auto 0;
+  color: var(--muted);
+  font-size: 1.28rem;
+  font-weight: 600;
+  line-height: 1.75;
+}
+
+.day-mark {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.65rem;
+  margin: 1.4rem 0 0;
+  color: var(--ink);
+}
+
+.day-mark span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 4.25rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.day-mark small {
+  color: var(--blue);
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.signature {
+  margin: 1.25rem 0 0;
+  color: #fff1e8;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.heart {
+  position: fixed;
+  left: var(--x);
+  top: var(--y);
+  z-index: 4;
+  color: var(--color);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: var(--size);
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  text-shadow:
+    0 0.16rem 0.55rem rgba(10, 9, 20, 0.28),
+    0 0 1.3rem color-mix(in srgb, var(--color) 72%, transparent);
+  transform: translate(-50%, -50%) scale(0.35) rotate(0deg);
+  animation: heart-pop var(--duration) cubic-bezier(0.17, 0.82, 0.34, 1) forwards;
+}
+
+@keyframes heart-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -34%) scale(0.35) rotate(0deg);
+  }
+
+  14% {
+    opacity: 1;
+  }
+
+  72% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(calc(-50% + var(--move-x)), calc(-50% + var(--move-y)))
+      scale(var(--scale))
+      rotate(var(--rotate));
+  }
+}
+
+@media (max-width: 700px) {
+  .stage {
+    min-height: 100dvh;
+    padding: 1.5rem;
+    background-position: center;
+  }
+
+  h1 {
+    font-size: 3.75rem;
+  }
+
+  .message-line {
+    font-size: 1.08rem;
+  }
+
+  .day-mark span {
+    font-size: 3.35rem;
+  }
+
+  .signature {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 390px) {
+  h1 {
+    font-size: 3.2rem;
+  }
+
+  .message-line {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
