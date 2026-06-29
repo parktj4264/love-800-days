@@ -77,9 +77,20 @@ body {
   position: relative;
   z-index: 2;
   width: min(45rem, 100%);
+  min-height: calc(100svh - 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(1rem, 4svh, 2.2rem) 0 clamp(1.15rem, 5svh, 2.65rem);
   text-align: center;
   text-shadow: 0 0.2rem 1.4rem var(--shadow), 0 0 2.5rem rgba(255, 118, 157, 0.36);
   user-select: none;
+}
+
+.message-top,
+.message-bottom {
+  width: 100%;
 }
 
 .kicker {
@@ -94,14 +105,14 @@ h1 {
   margin: 0;
   color: #fffdf9;
   font-family: Georgia, "Times New Roman", "Apple SD Gothic Neo", serif;
-  font-size: 5.25rem;
+  font-size: 4.65rem;
   font-weight: 800;
   line-height: 1.02;
   letter-spacing: 0;
 }
 
 .message-line {
-  margin: 1.15rem auto 0;
+  margin: 0 auto;
   color: var(--muted);
   font-size: 1.58rem;
   font-weight: 800;
@@ -113,7 +124,7 @@ h1 {
   align-items: baseline;
   justify-content: center;
   gap: 0.65rem;
-  margin: 1.4rem 0 0;
+  margin: 0.7rem 0 0;
   color: var(--ink);
 }
 
@@ -224,27 +235,32 @@ h1 {
     background-position: center;
   }
 
+  .message {
+    min-height: calc(100dvh - 3rem);
+    padding: clamp(0.7rem, 3dvh, 1.6rem) 0 clamp(0.8rem, 4dvh, 2rem);
+  }
+
   h1 {
-    font-size: 3.75rem;
+    font-size: 3.35rem;
   }
 
   .message-line {
-    font-size: 1.08rem;
+    font-size: 1.2rem;
   }
 
   .day-mark span {
-    font-size: 3.35rem;
+    font-size: 3.1rem;
   }
 
 }
 
 @media (max-width: 390px) {
   h1 {
-    font-size: 3.2rem;
+    font-size: 3rem;
   }
 
   .message-line {
-    font-size: 1rem;
+    font-size: 1.08rem;
   }
 }
 
