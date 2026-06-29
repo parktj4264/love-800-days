@@ -5,6 +5,7 @@ const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matc
 
 const heartGlyphs = ["♥", "❤", "♡"];
 const heartColors = ["#ff6f9f", "#ffd166", "#fff8f3", "#f45d96", "#8bd3dd"];
+const numberColors = ["#ffd166", "#fff8f3", "#ff8fab", "#8bd3dd"];
 const sparkColors = [
   [255, 209, 102],
   [255, 143, 171],
@@ -94,9 +95,33 @@ function makeHeart(x, y, index, total) {
   heart.addEventListener("animationend", () => heart.remove(), { once: true });
 }
 
+function makeNumberBurst(x, y, index, total) {
+  const number = document.createElement("span");
+  const angle = randomBetween(-Math.PI * 0.98, -Math.PI * 0.02);
+  const distance = randomBetween(72, 178);
+  const moveX = Math.cos(angle) * distance + randomBetween(-18, 18);
+  const moveY = Math.sin(angle) * distance - randomBetween(4, 46);
+
+  number.className = "burst-number";
+  number.textContent = "800";
+  number.style.setProperty("--x", `${x}px`);
+  number.style.setProperty("--y", `${y}px`);
+  number.style.setProperty("--move-x", `${moveX}px`);
+  number.style.setProperty("--move-y", `${moveY}px`);
+  number.style.setProperty("--rotate", `${randomBetween(-22, 22)}deg`);
+  number.style.setProperty("--scale", randomBetween(0.9, 1.28).toFixed(2));
+  number.style.setProperty("--duration", `${randomBetween(980, 1380)}ms`);
+  number.style.setProperty("--size", `${randomBetween(28, 58)}px`);
+  number.style.setProperty("--color", pick(numberColors));
+  number.style.animationDelay = `${index * randomBetween(18, 42)}ms`;
+  heartLayer.appendChild(number);
+  number.addEventListener("animationend", () => number.remove(), { once: true });
+}
+
 function burstAt(x, y, strength = 1) {
   const base = reducedMotion ? 5 : Math.round(randomBetween(14, 22) * strength);
   const total = Math.min(base, 30);
+  const numberTotal = reducedMotion ? 2 : Math.min(9, Math.max(5, Math.round(total * 0.34)));
 
   for (let index = 0; index < total; index += 1) {
     makeHeart(
@@ -104,6 +129,15 @@ function burstAt(x, y, strength = 1) {
       y + randomBetween(-12, 12),
       index,
       total,
+    );
+  }
+
+  for (let index = 0; index < numberTotal; index += 1) {
+    makeNumberBurst(
+      x + randomBetween(-16, 16),
+      y + randomBetween(-14, 14),
+      index,
+      numberTotal,
     );
   }
 }
