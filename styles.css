@@ -131,14 +131,6 @@ h1 {
   text-transform: uppercase;
 }
 
-.signature {
-  margin: 1.25rem 0 0;
-  color: #fff1e8;
-  font-size: 1.08rem;
-  font-weight: 700;
-  line-height: 1.7;
-}
-
 .heart,
 .burst-number {
   position: fixed;
@@ -244,9 +236,6 @@ h1 {
     font-size: 3.35rem;
   }
 
-  .signature {
-    font-size: 1rem;
-  }
 }
 
 @media (max-width: 390px) {
