@@ -37,10 +37,10 @@ body {
   padding: 2rem;
   cursor: pointer;
   background-image:
-    linear-gradient(180deg, rgba(9, 15, 35, 0.28), rgba(9, 13, 27, 0.62)),
-    linear-gradient(90deg, rgba(9, 15, 35, 0.3), rgba(255, 111, 159, 0.04)),
-    url("assets/anniversary-bg.png");
-  background-position: center;
+    linear-gradient(180deg, rgba(5, 7, 19, 0.18), rgba(5, 7, 19, 0.74)),
+    linear-gradient(90deg, rgba(5, 7, 19, 0.45), rgba(255, 111, 159, 0.06), rgba(5, 7, 19, 0.32)),
+    url("assets/couple-photo.jpg");
+  background-position: center 45%;
   background-size: cover;
 }
 
@@ -50,8 +50,9 @@ body {
   z-index: -1;
   content: "";
   background:
-    linear-gradient(180deg, rgba(255, 232, 209, 0.1), transparent 28%),
-    linear-gradient(0deg, rgba(5, 7, 19, 0.28), transparent 42%);
+    linear-gradient(180deg, rgba(255, 232, 209, 0.08), transparent 24%),
+    radial-gradient(circle at 50% 42%, rgba(255, 111, 159, 0.16), transparent 38%),
+    linear-gradient(0deg, rgba(5, 7, 19, 0.32), transparent 42%);
   pointer-events: none;
 }
 
@@ -102,9 +103,9 @@ h1 {
 .message-line {
   margin: 1.15rem auto 0;
   color: var(--muted);
-  font-size: 1.28rem;
-  font-weight: 600;
-  line-height: 1.75;
+  font-size: 1.58rem;
+  font-weight: 800;
+  line-height: 1.5;
 }
 
 .day-mark {
