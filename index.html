@@ -28,8 +28,8 @@
     />
     <meta name="theme-color" content="#171f3d" />
     <link rel="preload" href="assets/couple-photo.jpg" as="image" />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=scroll-cue-20260701d" />
+    <script src="script.js?v=scroll-cue-20260701d" defer></script>
   </head>
   <body>
     <main
@@ -55,10 +55,15 @@
         </div>
       </section>
 
+      <a class="scroll-cue" href="#moments" aria-label="추억 사진으로 스크롤">
+        <span class="scroll-cue-text">스크롤하세요</span>
+        <span class="scroll-cue-arrow" aria-hidden="true">↓</span>
+      </a>
+
       <div id="heart-layer" aria-hidden="true"></div>
     </main>
 
-    <section class="memory-section" aria-label="추억 사진">
+    <section class="memory-section" id="moments" aria-label="추억 사진">
       <div class="memory-inner">
         <div class="memory-heading">
           <p class="memory-kicker">OUR MOMENTS</p>

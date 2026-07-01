@@ -17,6 +17,10 @@ body {
   min-height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   overflow-x: hidden;
@@ -33,7 +37,7 @@ body {
   display: grid;
   place-items: center;
   isolation: isolate;
-  overflow: hidden;
+  overflow: visible;
   padding: 2rem;
   cursor: pointer;
   background-image:
@@ -42,7 +46,7 @@ body {
     url("assets/couple-photo.jpg");
   background-position: center 45%;
   background-size: cover;
-  touch-action: manipulation;
+  touch-action: auto;
 }
 
 .stage::after {
@@ -143,6 +147,42 @@ h1 {
   font-size: 1.05rem;
   font-weight: 800;
   text-transform: uppercase;
+}
+
+.scroll-cue {
+  position: absolute;
+  right: 0;
+  bottom: clamp(0.55rem, 1.8svh, 1.05rem);
+  left: 0;
+  z-index: 2;
+  display: inline-flex;
+  width: max-content;
+  max-width: calc(100% - 2rem);
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: center;
+  text-decoration: none;
+  text-shadow:
+    0 0.12rem 0.7rem rgba(5, 7, 19, 0.86),
+    0 0 1rem rgba(255, 111, 159, 0.34);
+  animation: scroll-cue-float 1.65s ease-in-out infinite;
+}
+
+.scroll-cue-text {
+  white-space: nowrap;
+}
+
+.scroll-cue-arrow {
+  color: var(--gold);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  line-height: 1;
 }
 
 .memory-section {
@@ -327,6 +367,17 @@ h2 {
   }
 }
 
+@keyframes scroll-cue-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(0.42rem);
+  }
+}
+
 @media (max-width: 700px) {
   .stage {
     min-height: 100dvh;
@@ -349,6 +400,15 @@ h2 {
 
   .day-mark span {
     font-size: 3.1rem;
+  }
+
+  .scroll-cue {
+    bottom: 0.55rem;
+    font-size: 0.72rem;
+  }
+
+  .scroll-cue-arrow {
+    font-size: 1.18rem;
   }
 
   .memory-section {
@@ -385,5 +445,9 @@ h2 {
   .memory-photo {
     opacity: 1;
     transform: none;
+  }
+
+  .scroll-cue {
+    animation: none;
   }
 }

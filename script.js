@@ -1,6 +1,7 @@
 const stage = document.querySelector(".stage");
 const heartLayer = document.querySelector("#heart-layer");
 const revealItems = document.querySelectorAll("[data-reveal]");
+const scrollCue = document.querySelector(".scroll-cue");
 const sparkleCanvas = document.querySelector("#sparkle-layer");
 const ctx = sparkleCanvas.getContext("2d");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -240,10 +241,37 @@ function revealOnScroll() {
   revealItems.forEach((item) => observer.observe(item));
 }
 
+function scrollToMoments() {
+  const target = document.querySelector(scrollCue.getAttribute("href"));
+  if (!target) return;
+
+  window.scrollTo({
+    top: target.offsetTop,
+    behavior: "auto",
+  });
+
+  window.setTimeout(() => {
+    history.replaceState(null, "", scrollCue.getAttribute("href"));
+  }, 0);
+}
+
 document.addEventListener("pointerdown", (event) => {
   burstAt(event.clientX, event.clientY);
+
+  const cueTarget =
+    event.target.closest(".scroll-cue") ||
+    document.elementFromPoint(event.clientX, event.clientY)?.closest(".scroll-cue");
+
+  if (cueTarget) {
+    event.preventDefault();
+    scrollToMoments();
+  }
 });
 
+scrollCue.addEventListener("click", (event) => {
+  event.preventDefault();
+  scrollToMoments();
+});
 window.addEventListener("resize", resizeCanvas);
 window.setInterval(updateDay, 60_000);
 
