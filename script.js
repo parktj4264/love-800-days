@@ -1,8 +1,12 @@
+const stage = document.querySelector(".stage");
 const heartLayer = document.querySelector("#heart-layer");
 const sparkleCanvas = document.querySelector("#sparkle-layer");
 const ctx = sparkleCanvas.getContext("2d");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const MS_PER_DAY = 86_400_000;
+const baseDayCount = Number(stage.dataset.baseDay);
+const baseDateParts = parseDateKey(stage.dataset.baseDate);
 const heartGlyphs = ["♥", "❤", "♡"];
 const heartColors = ["#ff6f9f", "#ffd166", "#fff8f3", "#f45d96", "#8bd3dd"];
 const numberColors = ["#ffd166", "#fff8f3", "#ff8fab", "#8bd3dd"];
@@ -17,6 +21,67 @@ let sparkles = [];
 let canvasWidth = 0;
 let canvasHeight = 0;
 let pixelRatio = 1;
+let currentDayCount = baseDayCount;
+
+function parseDateKey(value) {
+  const [year, month, day] = value.split("-").map(Number);
+  return { year, month, day };
+}
+
+function getSeoulDateParts(date = new Date()) {
+  const formatter = new Intl.DateTimeFormat("en", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const values = Object.fromEntries(
+    formatter.formatToParts(date).map((part) => [part.type, part.value]),
+  );
+
+  return {
+    year: Number(values.year),
+    month: Number(values.month),
+    day: Number(values.day),
+  };
+}
+
+function toDayNumber({ year, month, day }) {
+  return Math.floor(Date.UTC(year, month - 1, day) / MS_PER_DAY);
+}
+
+function getDayCount(date = new Date()) {
+  const base = toDayNumber(baseDateParts);
+  const today = toDayNumber(getSeoulDateParts(date));
+  return baseDayCount + today - base;
+}
+
+function getOrdinal(value) {
+  const lastTwo = value % 100;
+  if (lastTwo >= 11 && lastTwo <= 13) return `${value}TH`;
+
+  const last = value % 10;
+  if (last === 1) return `${value}ST`;
+  if (last === 2) return `${value}ND`;
+  if (last === 3) return `${value}RD`;
+  return `${value}TH`;
+}
+
+function updateDay() {
+  currentDayCount = getDayCount();
+  const dayText = String(currentDayCount);
+  const title = `우리의 ${dayText}일`;
+
+  document.title = title;
+  document.querySelector("[data-day-label]").textContent =
+    `OUR ${getOrdinal(currentDayCount)} DAY`;
+  document.querySelector(".day-mark").setAttribute("aria-label", `${dayText}일`);
+  document
+    .querySelectorAll("[data-day-count]")
+    .forEach((element) => {
+      element.textContent = dayText;
+    });
+}
 
 function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
@@ -36,7 +101,10 @@ function resizeCanvas() {
   sparkleCanvas.style.height = `${canvasHeight}px`;
   ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 
-  const count = reducedMotion ? 18 : Math.round((canvasWidth * canvasHeight) / 15500);
+  const count = reducedMotion
+    ? 18
+    : Math.round((canvasWidth * canvasHeight) / 15500);
+
   sparkles = Array.from({ length: Math.max(24, count) }, () => ({
     x: randomBetween(0, canvasWidth),
     y: randomBetween(0, canvasHeight),
@@ -61,9 +129,9 @@ function drawSparkles(time) {
     if (sparkle.x < -8) sparkle.x = canvasWidth + 8;
     if (sparkle.x > canvasWidth + 8) sparkle.x = -8;
 
-    const [r, g, b] = sparkle.color;
+    const [red, green, blue] = sparkle.color;
     ctx.beginPath();
-    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
     ctx.arc(sparkle.x, sparkle.y, sparkle.radius, 0, Math.PI * 2);
     ctx.fill();
   }
@@ -95,7 +163,7 @@ function makeHeart(x, y, index, total) {
   heart.addEventListener("animationend", () => heart.remove(), { once: true });
 }
 
-function makeNumberBurst(x, y, index, total) {
+function makeNumber(x, y, index) {
   const number = document.createElement("span");
   const angle = randomBetween(-Math.PI * 0.98, -Math.PI * 0.02);
   const distance = randomBetween(72, 178);
@@ -103,7 +171,7 @@ function makeNumberBurst(x, y, index, total) {
   const moveY = Math.sin(angle) * distance - randomBetween(4, 46);
 
   number.className = "burst-number";
-  number.textContent = "800";
+  number.textContent = String(currentDayCount);
   number.style.setProperty("--x", `${x}px`);
   number.style.setProperty("--y", `${y}px`);
   number.style.setProperty("--move-x", `${moveX}px`);
@@ -119,9 +187,13 @@ function makeNumberBurst(x, y, index, total) {
 }
 
 function burstAt(x, y, strength = 1) {
+  updateDay();
+
   const base = reducedMotion ? 5 : Math.round(randomBetween(14, 22) * strength);
   const total = Math.min(base, 30);
-  const numberTotal = reducedMotion ? 2 : Math.min(9, Math.max(5, Math.round(total * 0.34)));
+  const numberTotal = reducedMotion
+    ? 2
+    : Math.min(9, Math.max(5, Math.round(total * 0.34)));
 
   for (let index = 0; index < total; index += 1) {
     makeHeart(
@@ -133,11 +205,10 @@ function burstAt(x, y, strength = 1) {
   }
 
   for (let index = 0; index < numberTotal; index += 1) {
-    makeNumberBurst(
+    makeNumber(
       x + randomBetween(-16, 16),
       y + randomBetween(-14, 14),
       index,
-      numberTotal,
     );
   }
 }
@@ -153,7 +224,9 @@ document.addEventListener("pointerdown", (event) => {
 });
 
 window.addEventListener("resize", resizeCanvas);
+window.setInterval(updateDay, 60_000);
+
+updateDay();
 resizeCanvas();
 requestAnimationFrame(drawSparkles);
-
 window.setTimeout(welcomeBurst, 520);
