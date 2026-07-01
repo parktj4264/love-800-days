@@ -245,27 +245,36 @@ function scrollToMoments() {
   const target = document.querySelector(scrollCue.getAttribute("href"));
   if (!target) return;
 
-  window.scrollTo({
-    top: target.offsetTop,
-    behavior: "auto",
-  });
+  const getTargetTop = () => target.getBoundingClientRect().top + window.scrollY;
+  const scrollPage = (behavior) => {
+    const top = getTargetTop();
+    const scroller = document.scrollingElement || document.documentElement;
+
+    if (typeof scroller.scrollTo === "function") {
+      scroller.scrollTo({ top, behavior });
+    } else {
+      scroller.scrollTop = top;
+    }
+
+    window.scrollTo({ top, behavior });
+  };
+
+  scrollPage(reducedMotion ? "auto" : "smooth");
 
   window.setTimeout(() => {
+    if (Math.abs(target.getBoundingClientRect().top) > 2) {
+      const top = getTargetTop();
+      document.documentElement.scrollTop = top;
+      document.body.scrollTop = top;
+      scrollPage("auto");
+    }
+
     history.replaceState(null, "", scrollCue.getAttribute("href"));
-  }, 0);
+  }, reducedMotion ? 0 : 720);
 }
 
 document.addEventListener("pointerdown", (event) => {
   burstAt(event.clientX, event.clientY);
-
-  const cueTarget =
-    event.target.closest(".scroll-cue") ||
-    document.elementFromPoint(event.clientX, event.clientY)?.closest(".scroll-cue");
-
-  if (cueTarget) {
-    event.preventDefault();
-    scrollToMoments();
-  }
 });
 
 scrollCue.addEventListener("click", (event) => {
