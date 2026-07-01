@@ -1,6 +1,5 @@
 const stage = document.querySelector(".stage");
 const heartLayer = document.querySelector("#heart-layer");
-const memoryCards = document.querySelectorAll(".memory-card");
 const sparkleCanvas = document.querySelector("#sparkle-layer");
 const ctx = sparkleCanvas.getContext("2d");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -220,26 +219,6 @@ function welcomeBurst() {
   burstAt(centerX, centerY, reducedMotion ? 0.55 : 1.2);
 }
 
-function revealMemoryCards() {
-  if (reducedMotion || !("IntersectionObserver" in window)) {
-    memoryCards.forEach((card) => card.classList.add("is-visible"));
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
-      });
-    },
-    { rootMargin: "0px 0px -12% 0px", threshold: 0.16 },
-  );
-
-  memoryCards.forEach((card) => observer.observe(card));
-}
-
 document.addEventListener("pointerdown", (event) => {
   burstAt(event.clientX, event.clientY);
 });
@@ -248,7 +227,6 @@ window.addEventListener("resize", resizeCanvas);
 window.setInterval(updateDay, 60_000);
 
 updateDay();
-revealMemoryCards();
 resizeCanvas();
 requestAnimationFrame(drawSparkles);
 window.setTimeout(welcomeBurst, 520);
