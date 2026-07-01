@@ -3,8 +3,6 @@ const sparkleCanvas = document.querySelector("#sparkle-layer");
 const ctx = sparkleCanvas.getContext("2d");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const baseDate = { year: 2026, month: 7, day: 1 };
-const baseDayCount = 801;
 const heartGlyphs = ["♥", "❤", "♡"];
 const heartColors = ["#ff6f9f", "#ffd166", "#fff8f3", "#f45d96", "#8bd3dd"];
 const numberColors = ["#ffd166", "#fff8f3", "#ff8fab", "#8bd3dd"];
@@ -19,61 +17,6 @@ let sparkles = [];
 let canvasWidth = 0;
 let canvasHeight = 0;
 let pixelRatio = 1;
-let currentDayCount = baseDayCount;
-
-function getKoreaDateParts(date = new Date()) {
-  const formatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Seoul",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-  const parts = Object.fromEntries(
-    formatter.formatToParts(date).map((part) => [part.type, part.value]),
-  );
-
-  return {
-    year: Number(parts.year),
-    month: Number(parts.month),
-    day: Number(parts.day),
-  };
-}
-
-function toUtcDayNumber({ year, month, day }) {
-  return Math.floor(Date.UTC(year, month - 1, day) / 86400000);
-}
-
-function getDayCount(date = new Date()) {
-  const today = getKoreaDateParts(date);
-  return baseDayCount + toUtcDayNumber(today) - toUtcDayNumber(baseDate);
-}
-
-function getOrdinal(value) {
-  const lastTwo = value % 100;
-  if (lastTwo >= 11 && lastTwo <= 13) return `${value}TH`;
-
-  const last = value % 10;
-  if (last === 1) return `${value}ST`;
-  if (last === 2) return `${value}ND`;
-  if (last === 3) return `${value}RD`;
-  return `${value}TH`;
-}
-
-function updateDayCount() {
-  currentDayCount = getDayCount();
-  const dayText = String(currentDayCount);
-  const titleText = `우리의 ${dayText}일`;
-  const kicker = document.querySelector(".kicker");
-  const title = document.querySelector("h1");
-  const dayMark = document.querySelector(".day-mark");
-  const dayNumber = document.querySelector(".day-mark span");
-
-  document.title = titleText;
-  if (kicker) kicker.textContent = `OUR ${getOrdinal(currentDayCount)} DAY`;
-  if (title) title.textContent = titleText;
-  if (dayMark) dayMark.setAttribute("aria-label", `${dayText}일`);
-  if (dayNumber) dayNumber.textContent = dayText;
-}
 
 function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
@@ -160,7 +103,7 @@ function makeNumberBurst(x, y, index, total) {
   const moveY = Math.sin(angle) * distance - randomBetween(4, 46);
 
   number.className = "burst-number";
-  number.textContent = String(currentDayCount);
+  number.textContent = "800";
   number.style.setProperty("--x", `${x}px`);
   number.style.setProperty("--y", `${y}px`);
   number.style.setProperty("--move-x", `${moveX}px`);
@@ -210,7 +153,6 @@ document.addEventListener("pointerdown", (event) => {
 });
 
 window.addEventListener("resize", resizeCanvas);
-updateDayCount();
 resizeCanvas();
 requestAnimationFrame(drawSparkles);
 
