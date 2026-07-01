@@ -188,13 +188,26 @@ h1 {
 .memory-section {
   position: relative;
   min-height: 100svh;
-  padding: clamp(4rem, 10svh, 6.5rem) clamp(1.25rem, 5vw, 4rem) 5rem;
+  margin-top: -8rem;
+  padding: calc(clamp(4rem, 10svh, 6.5rem) + 8rem) clamp(1.25rem, 5vw, 4rem) 5rem;
   background:
-    linear-gradient(180deg, rgba(17, 23, 45, 0.15), #080b17 18%),
+    linear-gradient(180deg, rgba(8, 11, 23, 0), rgba(8, 11, 23, 0.82) 6rem, #080b17 9rem),
     linear-gradient(135deg, rgba(255, 111, 159, 0.13), rgba(139, 211, 221, 0.08) 48%, rgba(255, 209, 102, 0.09));
 }
 
+.memory-section::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 10rem;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(8, 11, 23, 0), rgba(8, 11, 23, 0.88) 72%, #080b17);
+  pointer-events: none;
+}
+
 .memory-inner {
+  position: relative;
+  z-index: 1;
   width: min(58rem, 100%);
   margin: 0 auto;
 }
@@ -413,7 +426,12 @@ h2 {
 
   .memory-section {
     min-height: 100dvh;
-    padding: 4rem 1rem 4.5rem;
+    margin-top: -6.5rem;
+    padding: 10.5rem 1rem 4.5rem;
+  }
+
+  .memory-section::before {
+    height: 8rem;
   }
 
   .memory-photo {
